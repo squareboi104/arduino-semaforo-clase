@@ -1,0 +1,84 @@
+// Semáforo coches + peatones
+
+int ledCR = 12; // El pin 12 es para el LED rojo de coches
+int ledCY = 11; // El pin 11 es para el LED amarillo de coches
+int ledCG = 10; // El pin 10 es para el LED verde de coches
+int ledPR = 8; // El pin 8 es para el LED rojo de peatones
+int ledPG = 9; // El pin 9 es para el LED verde de peatones
+int button = 13; // El pin 13 es para el botón de inicio del semáforo
+int state = 0; // El estado del botón por defecto es 0 (no presionado)
+
+void setup() {
+  pinMode(button, INPUT); // Establecer el botón como entrada
+  pinMode(ledCR, OUTPUT); // Establecer el LED rojo de coches como salida
+  pinMode(ledCY, OUTPUT); // Establecer el LED amarillo de coches como salida
+  pinMode(ledCG, OUTPUT); // Establecer el LED verde de coches como salida
+  pinMode(ledPR, OUTPUT); // Establecer el LED rojo de peatones como salida
+  pinMode(ledPG, OUTPUT); // Establecer el LED verde de peatones como salida
+}
+
+void yellow() { // Función para la intermitencia del LED amarillo(coches)
+  digitalWrite(ledCY, HIGH); // Enciende el LED amarillo(coches)
+  delay(500); // Espera 500ms
+  digitalWrite(ledCY, LOW); // Apaga el LED amarillo(coches)
+  delay(500); // Espera 500ms
+}
+
+void greenSlow() { // Función para el parpadeo LED verde(peatones) lento		 ** Las funciones greenSlow y greenFast sirven para
+  digitalWrite(ledPG, HIGH); // Enciende el LED verde(peatones)					 	avisar al peatón de que su luz verde se va a acabar.
+  delay(750); // Espera 750ms													 	Se que esto no era necesario pero me propuse hacerlo
+  digitalWrite(ledPG, LOW); // Apaga el LED verde(peatones)							y creo que quedo bastante bien **
+  delay(750); // Espera 750ms							
+}																			   
+
+void greenFast() { // Función para el parpadeo del LED verde(peatones) rápido
+  digitalWrite(ledPG, HIGH); // Enciende el LED verde(peatones)
+  delay(200); // Espera 200ms
+  digitalWrite(ledPG, LOW); // Apaga el LED verde(peatones)
+  delay(200); // Espera 200ms
+}
+
+void loop() { // Bucle que se repite cíclicamente
+  state = digitalRead(button); // Comprueba el estado del botón
+  
+  if (state == HIGH){ // Si se detecta que el botón ha sido pulsado, ejecuta
+    delay(3000); // Espera 3000ms = 3s
+    digitalWrite(ledCG, LOW); // Apaga el LED verde(coches)
+    
+    yellow(); // Llama la función yellow
+    yellow(); // Llama la función yellow
+    yellow(); // Llama la función yellow
+    yellow(); // Llama la función yellow
+    digitalWrite(ledCY, HIGH); // Enciende el LED amarillo(coches)
+    delay(500); // Espera 500ms
+    digitalWrite(ledCY, LOW); // Apaga el LED amarillo(coches)
+    
+    digitalWrite(ledCR, HIGH); // Enciende el LED rojo(coches)
+    digitalWrite(ledPR, LOW); // Apaga el LED rojo(peatones)
+    digitalWrite(ledPG, HIGH); // Enciende el LED verde(peatones)
+    delay(3000); // Espera 3000ms = 3s
+    
+    greenSlow(); // Llama la función greenSlow
+    greenSlow(); // Llama la función greenSlow
+    greenSlow(); // Llama la función greenSlow
+    digitalWrite(ledPG, HIGH); // Enciende el LED verde(peatones) 		 ** La razón por la que escribo el mismo contenido
+  	delay(750); // Espera 750ms										  		pero sin la última línea es para que no haya un delay
+ 	digitalWrite(ledPG, LOW); // Aapaga el LED verde(peatones)		  		y dejar medio segundo sin ninguna luz el semaforo **
+    
+    greenFast(); // Llama la función greenFast
+    greenFast(); // Llama la función greenFast
+    greenFast(); // Llama la función greenFast
+    greenFast(); // Llama la función greenFast
+    digitalWrite(ledPG, HIGH); // Enciende el LED verde(peatones)
+ 	delay(200); // Espera 200ms
+  	digitalWrite(ledPG, LOW); // Apaga el LED verde(peatones)      			** Aqui pasa igual **
+    
+    digitalWrite(ledCR, LOW); // Apaga el LED rojo(coches)
+    digitalWrite(ledPG, LOW); // Apaga el LED verde(coches)
+  }
+  else { // Se ejecuta de manera por defecto, cuando el botón no ha sido pulsado 
+    
+    digitalWrite(ledPR, HIGH); // Enciende el LED rojo(coches)
+    digitalWrite(ledCG, HIGH); // Enciende el LED verde(coches)
+  }
+}
